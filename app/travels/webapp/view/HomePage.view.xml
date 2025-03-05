@@ -1,0 +1,52 @@
+<mvc:View controllerName="com.ram.travels.controller.HomePage"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:l="sap.ui.layout">
+  <Page id="homepage" title="Welcome To Ram Travels" titleAlignment="Center" titleLevel="Auto" class="Home">
+
+    <!-- Header-->
+    <customHeader>
+      <Bar class="footer">
+        <contentRight>
+          <Button icon="images/image5.png" text="Login/SignUp"></Button>
+        </contentRight>
+        <contentMiddle>
+          <Button icon="sap-icon://bus-public-transport" text="Buses"></Button>
+          <Button icon="sap-icon://passenger-train" text="Trains"></Button>
+          <Button icon="sap-icon://flight" text="Flights"></Button>
+          <Button icon="sap-icon://home" text="Hotels"></Button>
+          <Button icon="images/image1.png" text="Offers"></Button>
+          <Button icon="images/image2.png" text="Track Ticket"></Button>
+          <Button icon="images/image3.png" text="Need Help"></Button>
+        </contentMiddle>
+        <contentLeft>
+          <HBox >
+            <Title text="Ram" titleStyle="Auto" class="mainTitle"></Title>
+            <Title text="Travels" titleStyle="Auto" class="mainTitle1"></Title>
+          </HBox>
+          <Image src="images/image4.png" height="38px"/>
+        </contentLeft>
+      </Bar>
+    </customHeader>
+
+    <!-- content-->
+    <content>
+
+      <!-- Background Image-->
+      <Image src="images/image6.png" height="100%" width="100%">
+      </Image>
+      
+    </content>
+
+    <!-- Footer-->
+    <footer>
+      <Bar class="footer">
+        <contentMiddle>
+          <Text text="New User? Register Here" class="registerText"></Text>
+          <Button text="Register" type="Emphasized" icon="sap-icon://action"></Button>
+        </contentMiddle>
+      </Bar>
+    </footer>
+
+  </Page>
+</mvc:View>

@@ -1,0 +1,13 @@
+### Create a new user
+POST http://localhost:4004/odata/v2/user/Users
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "firstName": "Parimi",
+  "lastName": "Ramanaiah",
+  "mobileNumber":628134,
+  "gender": "Male",
+  "emailId": "ram123@gmail.com",
+  "Password": "ram@123"
+}

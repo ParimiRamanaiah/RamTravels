@@ -8,7 +8,7 @@
     <customHeader>
       <Bar class="footer">
         <contentRight>
-          <Button icon="images/image5.png" text="Login/SignUp"></Button>
+          <Button icon="images/image5.png" text="Login/SignUp" press="onLogin"></Button>
         </contentRight>
         <contentMiddle>
           <Button icon="sap-icon://bus-public-transport" text="Buses"></Button>
@@ -43,7 +43,7 @@
       <Bar class="footer">
         <contentMiddle>
           <Text text="New User? Register Here" class="registerText"></Text>
-          <Button text="Register" type="Emphasized" icon="sap-icon://action"></Button>
+          <Button text="Register" type="Emphasized" icon="sap-icon://action" press="onRegister"></Button>
         </contentMiddle>
       </Bar>
     </footer>

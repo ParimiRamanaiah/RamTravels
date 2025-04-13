@@ -1,7 +1,6 @@
 namespace myapp;
-
 entity User {
-    key userId: Integer;
+    key userId: UUID;
     firstName: String;
     lastName: String;
     mobileNumber: Integer;

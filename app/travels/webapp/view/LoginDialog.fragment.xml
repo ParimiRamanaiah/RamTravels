@@ -4,10 +4,10 @@ xmlns:core="sap.ui.core">
 
 <Dialog id="loginDialog" title="User Login" draggable="true" resizable="true">
 <VBox class="sapUiSmallMargin"> 
-<Label text="User Name:"></Label>
+<Label text="User Name:" required="true"></Label>
 <Input id="idUserName" placeholder="Enter User Name"></Input>
-<Label text="Password:"></Label>
-<Input id="idPassword" placeholder="Enter Password"></Input>
+<Label text="Password:" required="true"></Label>
+<Input id="idPassword" placeholder="Enter Password" ></Input>
 </VBox>
 <beginButton>
 <Button id="idBegin" text="Submit" type="Emphasized" press="onSubmitLogin"/>

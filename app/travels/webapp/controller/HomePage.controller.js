@@ -4,8 +4,10 @@ sap.ui.define([
   "sap/ui/model/odata/v2/ODataModel",
   "sap/m/MessageToast",
   "sap/m/MessageBox",
-  "sap/ui/core/Fragment"
-], (Controller, JSONModel, ODataModel, MessageToast, MessageBox,Fragment) => {
+  "sap/ui/core/Fragment",
+  "sap/ui/core/ValueState",
+
+], (Controller, JSONModel, ODataModel, MessageToast, MessageBox,Fragment,ValueState) => {
   "use strict";
 
   return Controller.extend("com.ram.travels.controller.HomePage", {
@@ -31,26 +33,84 @@ sap.ui.define([
     },
 
     onSubmitRegister: function () {
+      let firstName = sap.ui.getCore().byId("firstName").getValue();
+      let lastName = sap.ui.getCore().byId("lastName").getValue();
+      let mobileNumber = sap.ui.getCore().byId("mobileNumber").getValue();
+      let gender = sap.ui.getCore().byId("gender").getValue();
+      let emailId = sap.ui.getCore().byId("emailId").getValue();
+      let Password = sap.ui.getCore().byId("password").getValue();
+      let confirmPassword=sap.ui.getCore().byId("confirmPassword").getValue();
+
+      if(!firstName || !lastName || !mobileNumber || !gender || !emailId || !Password){
+        MessageBox.information("Please fill in all required fields.");
+        return;
+      }
+
+      if(mobileNumber.length !== 10){
+        sap.ui.getCore().byId("mobileNumber").setValueState(ValueState.Error);
+        sap.ui.getCore().byId("mobileNumber").setValueStateText("Mobile Number should be exactly 10 digits");
+        return;
+      }
+      else{
+        sap.ui.getCore().byId("mobileNumber").setValueState(ValueState.None);
+      }
+      
+      let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+      if(!emailPattern.test(emailId)){
+       sap.ui.getCore().byId("emailId").setValueState(ValueState.Error);
+       sap.ui.getCore().byId("emailId").setValueStateText("Please Enter a valid email address.");
+       return;
+      }
+      else{
+        sap.ui.getCore().byId("emailId").setValueState(ValueState.None);
+      }
+
+      let passwordPattern = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{9,}$/;
+      if(!passwordPattern.test(Password)){
+        sap.ui.getCore().byId("password").setValueState(ValueState.Error);
+        sap.ui.getCore().byId("password").setValueStateText("Password must be longer than 8 characters and atleast one special character.");
+        return;
+      }
+      else{
+        sap.ui.getCore().byId("password").setValueState(ValueState.None);
+      }
+
+      if(Password !== confirmPassword){
+        MessageBox.information("Password and Confirm Password should be the same.");
+        return;
+      }
+
       const payload = {
-        firstName: sap.ui.getCore().byId("firstName").getValue(),
-        lastName: sap.ui.getCore().byId("lastName").getValue(),
-        mobileNumber: parseInt(sap.ui.getCore().byId("mobileNumber").getValue(), 10),
-        gender: sap.ui.getCore().byId("gender").getValue(),
-        emailId: sap.ui.getCore().byId("emailId").getValue(),
-        Password: sap.ui.getCore().byId("password").getValue()
-      };
+        firstName: firstName,
+        lastName: lastName,
+        mobileNumber: mobileNumber,
+        gender: gender,
+        emailId: emailId,
+        Password: Password
+      }
 
       // Call OData create
       this.oModel.create("/Users", payload, {
         success: () => {
-          MessageBox.information("Resgistration Successful!");
+          MessageBox.success("Resgistration Successful!");
+          this.onRegisterClear();
           this.registerDialog.close();
         },
         error: (err) => {
-          MessageBox.information("Registration failed!");
+          MessageBox.error("Registration failed!");
           console.error("Error:", err);
         }
       });
+    },
+
+    onRegisterClear:function(){
+       sap.ui.getCore().byId("firstName").setValue("");
+       sap.ui.getCore().byId("lastName").setValue("");
+       sap.ui.getCore().byId("mobileNumber").setValue("");
+       sap.ui.getCore().byId("gender").setValue("");
+       sap.ui.getCore().byId("emailId").setValue("");
+       sap.ui.getCore().byId("password").setValue("");
+       sap.ui.getCore().byId("confirmPassword").setValue("");
     },
 
     onLogin:async function(){

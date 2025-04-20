@@ -3,18 +3,20 @@
   xmlns:core="sap.ui.core">
   <Dialog id="registerDialog" title="User Registration" draggable="true" resizable="true">
     <VBox class="sapUiSmallMargin">
-      <Label text="First Name:"></Label>
+      <Label text="First Name:" required="true"></Label>
       <Input placeholder="Enter First Name" id="firstName"/>
-      <Label text="Last Name:"></Label>
+      <Label text="Last Name:"  required="true"></Label>
       <Input placeholder="Enter Last Name" id="lastName"/>
-      <Label text="Mobile Number:"></Label>
+      <Label text="Mobile Number:"  required="true"></Label>
       <Input placeholder="Enter Mobile Number" id="mobileNumber" type="Tel"/>
-      <Label text="Gender:"></Label>
+      <Label text="Gender:"  required="true"></Label>
       <Input placeholder="Enter Gender" id="gender"/>
-      <Label text="Email Id:"></Label>
+      <Label text="Email Id:"  required="true"></Label>
       <Input placeholder="Enter Email Id" id="emailId" type="Email"/>
-      <Label text="Password:"></Label>
+      <Label text="Password:"  required="true"></Label>
       <Input placeholder="Enter Password" id="password" type="Password"/>
+      <Label text="Confirm Password:"  required="true"></Label>
+      <Input placeholder="Enter Password" id="confirmPassword" type="Password"/>
     </VBox>
     <beginButton>
       <Button text="Submit" type="Emphasized" press="onSubmitRegister"/>

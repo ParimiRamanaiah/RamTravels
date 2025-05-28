@@ -9,6 +9,7 @@ modules:
     requires:
       - name: RamTravels-auth
       - name: RamTravels-db
+      - name: RamTravels-destination-service
     provides:
       - name: srv-api
         properties:
@@ -70,7 +71,6 @@ modules:
         - npm install
         - npm run build:cf
         - npm ci
-        - npm run build
       supported-platforms:
         []
 
@@ -103,6 +103,9 @@ resources:
       service-plan: app-runtime
   - name: RamTravels-destination-service
     type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
+
     parameters:
       config:
         HTML5Runtime_enabled: false
@@ -110,12 +113,27 @@ resources:
           instance:
             destinations:
               - Authentication: NoAuthentication
+                HTML5.DynamicDestination: true
+                HTML5.ForwardAuthToken: true
+                Name: RamTravels-srv-api
+                ProxyType: Internet
+                Type: HTTP
+                URL: ~{srv-api/srv-url}
+              - Authentication: NoAuthentication
                 Name: ui5
                 ProxyType: Internet
                 Type: HTTP
                 URL: https://ui5.sap.com
-            existing_destinations_policy: update
-        version: 1.0.0
+              - Authentication: NoAuthentication
+                Description: Project Manager CAP service
+                HTML5.DynamicDestination: true
+                HTML5.ForwardAuthToken: true
+                Name: RamTravels-app-api
+                ProxyType: Internet
+                Type: HTTP
+                URL: ~{srv-api/srv-url}
+          existing_destinations_policy: update
+      version: 1.0.0
       service: destination
       service-name: RamTravels-destination-service
       service-plan: lite

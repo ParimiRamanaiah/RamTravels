@@ -1,0 +1,58 @@
+/* Enter your custom styles here */
+.mainTitle{
+    color:#ff0000 !important;
+}
+.mainTitle1{
+    color:brown !important;
+}
+
+.footer{
+    background: linear-gradient(to right, orange, white,rgb(99, 228, 99)) !important;
+}
+
+.registerText{
+    color:blue !important;
+}
+.sapMSearchField {
+  position: relative;
+}
+
+#busyIndicator {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.noFocusOutline:hover {
+  cursor: pointer;
+  background-color:skyblue;
+ 
+}
+
+.noFocusOutline:focus {
+  outline: none;
+}
+
+.noFocusOutline{
+  font-weight: 1000;
+  font-size: large;
+  border: none;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+.highlighted {
+  color: blue;
+  font-weight: bold;
+}
+
+.image{
+  background-image: url("https://icon-library.com/images/employee-icon-png/employee-icon-png-15.jpg");
+  padding-left: 10px;
+  background-repeat: no-repeat;
+  background-size: 25px;
+}
+.text{
+  margin-left: 25px;
+}
+

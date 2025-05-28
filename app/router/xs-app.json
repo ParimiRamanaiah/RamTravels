@@ -1,5 +1,12 @@
 {
+  "authenticationMethod": "route",
+  "sessionTimeout": 10,
   "routes": [
+    {
+      "source": "^/user-api(.*)",
+      "target": "$1",
+      "service": "sap-approuter-userapi"
+    },
     {
       "source": "^/app/(.*)$",
       "target": "$1",
@@ -17,5 +24,11 @@
       "destination": "srv-api",
       "csrfProtection": true
     }
-  ]
+  ],
+  "logout": {
+    "logoutEndpoint": "/my/logout",
+    "logoutPage": "https://www.google.com"
+},
+"welcomeFile": "comramtravels"
+
 }

@@ -1,0 +1,8 @@
+<mvc:View controllerName="com.ram.travels.controller.User"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+    <Page id="userpage" title="Welcome To Ram Travels">
+    </Page>
+</mvc:View>

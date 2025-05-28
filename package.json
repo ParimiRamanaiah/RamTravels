@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@cap-js-community/odata-v2-adapter": "^1.14.3",
+    "@cap-js-community/odata-v2-adapter": "^1.14.4",
     "@cap-js/hana": "^1",
     "@cap-js/postgres": "^1",
     "@sap/cds": "^8",
@@ -41,8 +41,38 @@
           }
         }
       },
-      "auth": "mocked",
-      "html5-repo": true
+      "rest_api": {
+        "kind": "rest",
+        "credentials": {
+          "forwardAuthToken": true
+        }
+      },
+      "auth": {
+        "[development]": {
+          "kind": "basic",
+          "users": {
+            "Admin": {
+              "attr": {
+                "email": "ramanaiahparimi@gmail.com",
+                "givenName": "Ramanaiah",
+                "familyName": "Parimi",
+                "password": "initial"
+              },
+              "roles": [
+                "Admin"
+              ]
+            }
+          }
+        }
+      },
+      "destinations": true,
+      "html5-repo": true,
+      "[production]": {
+        "auth": {
+          "kind": "xsuaa"
+        },
+        "db": "hana"
+      }
     },
     "sql": {
       "native_hana_associations": false

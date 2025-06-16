@@ -7,7 +7,7 @@ sap.ui.define([
   "sap/ui/core/Fragment",
   "sap/ui/core/ValueState",
 
-], (Controller, JSONModel, ODataModel, MessageToast, MessageBox,Fragment,ValueState) => {
+], (Controller, JSONModel, ODataModel, MessageToast, MessageBox, Fragment, ValueState) => {
   "use strict";
 
   return Controller.extend("com.ram.travels.controller.HomePage", {
@@ -39,43 +39,43 @@ sap.ui.define([
       let gender = sap.ui.getCore().byId("gender").getValue();
       let emailId = sap.ui.getCore().byId("emailId").getValue();
       let Password = sap.ui.getCore().byId("password").getValue();
-      let confirmPassword=sap.ui.getCore().byId("confirmPassword").getValue();
+      let confirmPassword = sap.ui.getCore().byId("confirmPassword").getValue();
 
-      if(!firstName || !lastName || !mobileNumber || !gender || !emailId || !Password){
+      if (!firstName || !lastName || !mobileNumber || !gender || !emailId || !Password) {
         MessageBox.information("Please fill in all required fields.");
         return;
       }
 
-      if(mobileNumber.length !== 10){
+      if (mobileNumber.length !== 10) {
         sap.ui.getCore().byId("mobileNumber").setValueState(ValueState.Error);
         sap.ui.getCore().byId("mobileNumber").setValueStateText("Mobile Number should be exactly 10 digits");
         return;
       }
-      else{
+      else {
         sap.ui.getCore().byId("mobileNumber").setValueState(ValueState.None);
       }
-      
+
       let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-      if(!emailPattern.test(emailId)){
-       sap.ui.getCore().byId("emailId").setValueState(ValueState.Error);
-       sap.ui.getCore().byId("emailId").setValueStateText("Please Enter a valid email address.");
-       return;
+      if (!emailPattern.test(emailId)) {
+        sap.ui.getCore().byId("emailId").setValueState(ValueState.Error);
+        sap.ui.getCore().byId("emailId").setValueStateText("Please Enter a valid email address.");
+        return;
       }
-      else{
+      else {
         sap.ui.getCore().byId("emailId").setValueState(ValueState.None);
       }
 
       let passwordPattern = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{9,}$/;
-      if(!passwordPattern.test(Password)){
+      if (!passwordPattern.test(Password)) {
         sap.ui.getCore().byId("password").setValueState(ValueState.Error);
         sap.ui.getCore().byId("password").setValueStateText("Password must be longer than 8 characters and atleast one special character.");
         return;
       }
-      else{
+      else {
         sap.ui.getCore().byId("password").setValueState(ValueState.None);
       }
 
-      if(Password !== confirmPassword){
+      if (Password !== confirmPassword) {
         MessageBox.information("Password and Confirm Password should be the same.");
         return;
       }
@@ -91,10 +91,20 @@ sap.ui.define([
 
       // Call OData create
       this.oModel.create("/Users", payload, {
-        success: () => {
-          MessageBox.success("Resgistration Successful!");
-          this.onRegisterClear();
-          this.registerDialog.close();
+        success: (req) => {
+          if(req.message.startsWith("Registration",)){
+            MessageBox.success(req.message,{
+              onClose:function(oAction){
+                if(oAction === 'OK'){
+                  this.onRegisterClear();
+                  this.registerDialog.close();
+                }
+              }.bind(this)
+            });
+          }
+          else if(req.message.startsWith("A user")){
+            MessageBox.information(req.message);
+          }
         },
         error: (err) => {
           MessageBox.error("Registration failed!");
@@ -103,60 +113,65 @@ sap.ui.define([
       });
     },
 
-    onRegisterClear:function(){
-       sap.ui.getCore().byId("firstName").setValue("");
-       sap.ui.getCore().byId("lastName").setValue("");
-       sap.ui.getCore().byId("mobileNumber").setValue("");
-       sap.ui.getCore().byId("gender").setValue("");
-       sap.ui.getCore().byId("emailId").setValue("");
-       sap.ui.getCore().byId("password").setValue("");
-       sap.ui.getCore().byId("confirmPassword").setValue("");
+    onRegisterClear: function () {
+      sap.ui.getCore().byId("firstName").setValue("");
+      sap.ui.getCore().byId("lastName").setValue("");
+      sap.ui.getCore().byId("mobileNumber").setValue("");
+      sap.ui.getCore().byId("gender").setValue("");
+      sap.ui.getCore().byId("emailId").setValue("");
+      sap.ui.getCore().byId("password").setValue("");
+      sap.ui.getCore().byId("confirmPassword").setValue("");
     },
 
-    onLogin:async function(){
-      if(this.loginDialog===undefined){
-        this.loginDialog=sap.ui.xmlfragment(this.getView().getId(),"com.ram.travels.view.LoginDialog",this);
+    onLogin: async function () {
+      if (this.loginDialog === undefined) {
+        this.loginDialog = sap.ui.xmlfragment(this.getView().getId(), "com.ram.travels.view.LoginDialog", this);
         this.getView().addDependent(this.loginDialog);
       }
       this.loginDialog.open();
     },
 
-    onCloseLogin:function(){
+    onCloseLogin: function () {
       this.loginDialog.close();
     },
 
-    onSubmitLogin:function(){
-      let emailId=this.getView().byId("idUserName").getValue().trim();
-      let pass=this.getView().byId("idPassword").getValue().trim();
-      let flag=false;
-      var count=0;
+    onLoginClear: function(){
+      this.getView().byId("idUserName").setValue("");
+      this.getView().byId("idPassword").setValue("");
+    },
 
-      this.oModel.read('/Users',{
-        success:function(oData){
-          console.log(oData,"oData");
-          for(let i=0; i<oData.results.length; i++){
-            let userName=oData.results[i].emailId;
-            let password=oData.results[i].Password;
+    onSubmitLogin: function () {
+      let emailId = this.getView().byId("idUserName").getValue().trim();
+      let pass = this.getView().byId("idPassword").getValue().trim();
+      this.onSubmitLogin.count = this.onSubmitLogin.count || 0;
 
-            if(emailId===userName && pass===password){
-              MessageBox.information("Login Successfull!");
-              flag=true;
-              count=0;
-              break;
-            }
-            else{
-              count++;
-            }
+      if (!emailId || !pass) {
+        MessageBox.information("Please fill in all required fields.");
+        return;
+      }
+
+      this.oModel.read('/login', {
+
+        urlParameters: {
+          emailId: emailId,
+          password:pass
+        },
+        success : function(req){
+          console.log("req",req);
+          if(req.login.message.startsWith("Login")){
+            MessageBox.success(req.login.message,{
+              onClose:function(oAction){
+                if(oAction === "OK"){
+                  this.onLoginClear();
+                  this.loginDialog.close();
+                }
+              }.bind(this)
+            });
           }
-
-          if(!flag){
-            MessageBox.information("Wrong credentials. Please check your email and password.");
+          else{
+            MessageBox.information(req.login.message);
           }
-
-        }.bind(this),
-        error:function(){
-          MessageBox.error("Failed to fetch user data.");
-        }
+        }.bind(this)
       })
     }
   });

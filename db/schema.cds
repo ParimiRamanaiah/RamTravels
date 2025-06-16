@@ -9,4 +9,5 @@ entity User {
     Password: String;
     failedCount: Integer @default: 0;
     accountStatus: String @default: 'Active';
+    lockedAt:Timestamp
 }

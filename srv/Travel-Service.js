@@ -2,7 +2,64 @@ const { year } = require('@cap-js/hana/lib/cql-functions');
 const cds = require('@sap/cds');
 
 module.exports = cds.service.impl(async function () {
+
+    this.on('getUserInfo', async(req)=>{
+        try{
+        console.log("inside userinfo")
+        const user = req.user.id;
+        console.log("user",user);
+        const userData = cds.context;
+        console.log("userData",userData);
+        }
+        catch(error){
+            console.log("error",error);
+        }
+    })
+
     const { Users } = this.entities;
+
+    //destination
+    const northwind = await cds.connect.to("northwind");
+    //console.log("northwind", northwind);
+
+    const result = await northwind.get(`/V2/Northwind/Northwind.svc/Orders?$format=json`);
+    //console.log("result", result);
+
+
+    const Northwind = await cds.connect.to('Northwind');
+
+    const { Orders } = Northwind.entities;
+    const ordersData = await Northwind.run(SELECT(Orders).limit(5));
+    //console.log("OrdersData", ordersData);
+
+    const { Products } = Northwind.entities;
+
+    const result1 = await Northwind.run(
+        SELECT.from(Products, p => { p.ProductID,p.ProductName,p.UnitPrice,
+                p.Category(c => {
+                    c.CategoryID,
+                    c.CategoryName,
+                    c.Description
+                })}).limit(1));
+
+    //console.log(result1);
+
+
+    this.on('READ', 'Products', async (req) => {
+        console.log("inside edmx northwind");
+        //console.log("req.query", req.query);
+        return Northwind.run(req.query);
+    });
+
+
+    //const payload = {
+    // ShipCity: "France"
+    // };
+
+    //return northwind.put(
+    //`/V2/Northwind/Northwind.svc/Orders(10347)`,
+    //payload
+    //);
 
     //Resgistration
     this.on('CREATE', 'Users', async (req) => {
@@ -108,9 +165,10 @@ module.exports = cds.service.impl(async function () {
             await UPDATE(Users).set(updates).where({ emailId: emailId });
             return { message };
         }
-    })
+    });
 
     function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
+    };
+
 });

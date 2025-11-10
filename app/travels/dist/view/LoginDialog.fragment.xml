@@ -10,7 +10,7 @@ xmlns:core="sap.ui.core">
 <Input id="idPassword" placeholder="Enter Password" ></Input>
 </VBox>
 <beginButton>
-<Button id="idBegin" text="Submit" type="Emphasized" press="onSubmitLogin"/>
+<Button id="idBegin" text="Login" type="Emphasized" press="onSubmitLogin"/>
 </beginButton>
 <endButton>
 <Button id="idEnd" text="Cancel" type="Emphasized" press="onCloseLogin"></Button>
